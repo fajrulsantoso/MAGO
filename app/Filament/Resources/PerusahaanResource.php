@@ -21,6 +21,7 @@ class PerusahaanResource extends Resource
 {
     protected static ?string $model = PerusahaanModel::class;
 
+    protected static ?string $navigationIcon = 'heroicon-s-building-office'; // pakai solid icon
     protected static ?string $navigationLabel = 'Perusahaan Mitra';
     protected static ?string $navigationGroup = 'Pengguna & Mitra';
     protected static ?int $navigationSort = 1;
