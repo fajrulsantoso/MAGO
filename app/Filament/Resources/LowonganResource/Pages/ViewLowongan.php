@@ -23,6 +23,10 @@ class ViewLowongan extends ViewRecord
                             
                         Infolists\Components\TextEntry::make('perusahaan.nama')
                             ->label('Perusahaan'),
+                        
+                        Infolists\Components\TextEntry::make('perusahaan.alamat')
+                            ->label('Alamat Perusahaan')
+                            ->columnSpanFull(),
                             
                         Infolists\Components\TextEntry::make('deskripsi_lowongan')
                             ->label('Deskripsi Lowongan')

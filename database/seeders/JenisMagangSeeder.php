@@ -21,5 +21,7 @@ class JenisMagangSeeder extends Seeder
         ];
 
         DB::table('m_jenis_magang')->insert($data);
+
+        $this->command->info('Berhasil menyeeder ' . count($data) . ' data jenis magang');
     }
 }

@@ -139,5 +139,7 @@ class MahasiswaSeeder extends Seeder
         }
 
         DB::table('m_mahasiswa')->insert($data);
+
+        $this->command->info('Berhasil menyeeder ' . count($data) . ' data mahasiswa');
     }
 }

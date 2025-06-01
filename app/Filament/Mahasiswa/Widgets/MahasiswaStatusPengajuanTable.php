@@ -191,6 +191,8 @@ class MahasiswaStatusPengajuanTable extends BaseWidget
                             ])
                             ->columns(2),
                     ]),
-            ]);
+            ])
+            ->emptyStateHeading('Tidak ada pengajuan magang yang ditemukan')
+            ->emptyStateDescription('Silakan ajukan magang baru untuk melihat statusnya.');
     }
 }

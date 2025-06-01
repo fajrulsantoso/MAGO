@@ -35,9 +35,25 @@ class PembimbingPanelProvider extends PanelProvider
             ->id('pembimbing')
             ->path('pembimbing')
             ->login(false)
+            ->renderHook(
+                'panels::head.start',
+                fn () => view('filament.favicon')
+            )
+            ->databaseNotifications()
             ->colors([
-                'primary' => Color::Amber,
+                'danger' => Color::Red,
+                'gray' => Color::Slate,
+                'info' => Color::Indigo,
+                'primary' => Color::Blue,
+                'success' => Color::Emerald,
+                'warning' => Color::Orange,
             ])
+            ->font('Poppins')
+            ->brandName('MAGO')
+            ->brandLogo(asset('images/logo1.png'))
+            ->brandLogoHeight('1.5rem')
+            ->darkModeBrandLogo(asset('images/logo2.png'))
+            ->sidebarCollapsibleOnDesktop()
             ->discoverResources(in: app_path('Filament/Pembimbing/Resources'), for: 'App\\Filament\\Pembimbing\\Resources')
             ->discoverPages(in: app_path('Filament/Pembimbing/Pages'), for: 'App\\Filament\\Pembimbing\\Pages')
             ->pages([

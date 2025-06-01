@@ -27,5 +27,7 @@ class InsentifSeeder extends Seeder
         ];
 
         DB::table('m_insentif')->insert($data);
+
+        $this->command->info('Berhasil menyeeder ' . count($data) . ' data insentif');
     }
 }

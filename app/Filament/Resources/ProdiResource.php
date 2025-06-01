@@ -21,7 +21,10 @@ class ProdiResource extends Resource
     protected static ?string $model = ProdiModel::class;
 
     protected static ?string $navigationIcon = 'heroicon-s-building-library';
-    protected static ?string $navigationGroup = 'Reference Data';
+    protected static ?string $navigationLabel = 'Program Studi';
+    protected static ?string $pluralModelLabel = 'Data Program Studi';
+    protected static ?string $modelLabel = 'Program Studi';
+    protected static ?string $navigationGroup = 'Data Referensi';
 
     public static function form(Form $form): Form
     {
@@ -61,7 +64,9 @@ class ProdiResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->emptyStateHeading('Tidak ada data program studi yang ditemukan')
+            ->emptyStateDescription('Silakan buat data program studi baru.');
     }
 
     public static function getRelations(): array
@@ -78,20 +83,5 @@ class ProdiResource extends Resource
             'create' => Pages\CreateProdi::route('/create'),
             'edit' => Pages\EditProdi::route('/{record}/edit'),
         ];
-    }
-
-    public static function getNavigationLabel(): string
-    {
-        return 'Manajemen Prodi';
-    }
-
-    public static function getPluralModelLabel(): string
-    {
-        return 'Data Program Studi';
-    }
-
-    public static function getModelLabel(): string
-    {
-        return 'Prodi';
     }
 }

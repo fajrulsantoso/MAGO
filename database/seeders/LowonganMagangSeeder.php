@@ -54,12 +54,12 @@ class LowonganMagangSeeder extends Seeder
             "• Terlibat dalam proyek %s dari konsep hingga pelaksanaan\n• Melakukan %s secara rutin\n• Berkoordinasi dengan tim %s\n• Membuat prototype atau model\n• Mendokumentasikan proses dan hasil kerja"
         ];
 
-        // Daftar template benefit - PERBAIKAN: Hanya 3 parameter yang dibutuhkan
+        // Daftar template benefit
         $benefitTemplate = [
             "• Pengalaman kerja langsung di industri %s\n• Sertifikat magang\n• Kesempatan networking dengan profesional\n• Lingkungan kerja yang supportive\n• %s",
             "• Mentor dedicated selama program magang\n• Pelatihan dan workshop\n• Exposure ke proyek %s nyata\n• Referensi kerja\n• %s",
             "• Lingkungan belajar yang interaktif\n• Jam kerja yang fleksibel\n• Kesempatan berkolaborasi dalam proyek %s\n• Feedback berkala dari supervisor\n• %s",
-            "• Program mentoring dari profesional berpengalaman\n• Kesempatan dipekerjakan full-time setelah magang\n• Pengalaman bekerja dalam proyek %s yang berdampak\n• Akses ke resources perusahaan\n• %s", // PERBAIKAN: Menghapus placeholder %s yang tidak perlu
+            "• Program mentoring dari profesional berpengalaman\n• Kesempatan dipekerjakan full-time setelah magang\n• Pengalaman bekerja dalam proyek %s yang berdampak\n• Akses ke resources perusahaan\n• %s",
             "• Exposure ke industri %s\n• Networking dengan profesional dan sesama intern\n• Career coaching\n• Sertifikat penyelesaian\n• %s"
         ];
 
@@ -114,13 +114,21 @@ class LowonganMagangSeeder extends Seeder
         // Daftar data untuk lowongan magang
         $data = [];
         
-        // Tanggal saat ini - sebagai referensi
-        $currentDate = Carbon::parse('2025-05-28');
+        // Tanggal saat ini - menggunakan tanggal yang diberikan user
+        $currentDate = Carbon::parse('2025-05-31 07:38:09');
 
         // Tahun-tahun untuk lowongan historis dan current
         $years = [2023, 2024, 2025];
+
+        // Jumlah data yang akan dibuat
+        $totalData = 200; // Lebih dari 100 data sesuai permintaan
         
-        for ($i = 1; $i <= 120; $i++) {
+        // Mengubah rasio status aktif vs selesai (70% aktif, 30% selesai)
+        $activeRatio = 0.7;
+        $activeCount = floor($totalData * $activeRatio);
+        $completedCount = $totalData - $activeCount;
+        
+        for ($i = 1; $i <= $totalData; $i++) {
             // Tentukan tahun posting secara acak
             $year = $years[array_rand($years)];
             
@@ -131,22 +139,38 @@ class LowonganMagangSeeder extends Seeder
                 
                 // Batas akhir 2-4 minggu setelah posting
                 $batasAkhir = $postingDate->copy()->addWeeks(rand(2, 4));
-                
-                // Status berdasarkan batas akhir dan current date
-                $status = $batasAkhir->greaterThanOrEqualTo($currentDate) ? 'Aktif' : 'Selesai';
             } else {
-                // Untuk tahun lalu, buat lowongan yang sudah selesai
+                // Untuk tahun lalu, buat lowongan dari tahun tersebut
                 $month = rand(1, 12);
                 $postingDate = Carbon::createFromDate($year, $month, rand(1, 28));
                 $batasAkhir = $postingDate->copy()->addWeeks(rand(2, 4));
+            }
+            
+            // Tentukan status secara acak, tapi pastikan jumlah aktif dan selesai sesuai rasio
+            if ($i <= $activeCount) {
+                $status = 'Aktif';
+                
+                // Untuk lowongan aktif, pastikan batas akhir setelah current date
+                if ($batasAkhir->lessThan($currentDate)) {
+                    $batasAkhir = $currentDate->copy()->addDays(rand(7, 30));
+                }
+            } else {
                 $status = 'Selesai';
+                
+                // Untuk lowongan selesai, pastikan batas akhir sebelum current date
+                if ($batasAkhir->greaterThan($currentDate)) {
+                    $batasAkhir = $currentDate->copy()->subDays(rand(1, 30));
+                }
             }
             
             // Pilih posisi magang secara acak
             $posisi = $posisiMagang[array_rand($posisiMagang)];
             
+            // Generate nama perusahaan yang realistis
+            $namaPerusahaan = "Perusahaan #" . ($i % 100 + 1);
+            
             // Generate judul lowongan yang realistis
-            $judul = "Lowongan Magang " . $posisi . " di " . "Perusahaan #" . ($i % 100 + 1);
+            $judul = "Lowongan Magang " . $posisi . " di " . $namaPerusahaan;
             
             // Generate deskripsi yang realistis
             $bidangAcak = $bidangFokus[array_rand($bidangFokus)];
@@ -195,7 +219,6 @@ class LowonganMagangSeeder extends Seeder
             $periodeName .= ($postingDate->month > 6) ? 'Ganjil' : 'Genap';
             
             // Asumsi: menggunakan PeriodeSeeder yang sudah dibuat, id periode sesuai dengan urutan
-            // Secara sederhana, kita bisa menghitung id_periode
             $baseYear = 1975; // Tahun awal di PeriodeSeeder
             $id_periode = (($periodeYear - $baseYear) * 2) + ($postingDate->month > 6 ? 1 : 2);
             
@@ -220,6 +243,19 @@ class LowonganMagangSeeder extends Seeder
             ];
         }
         
+        // Acak data setelah dibuat untuk memastikan distribusi status random
+        shuffle($data);
+        
+        // Reassign ID setelah pengacakan
+        for ($index = 0; $index < count($data); $index++) {
+            $data[$index]['id_lowongan'] = $index + 1;
+        }
+        
+        // Memasukkan data ke database
         DB::table('t_lowongan_magang')->insert($data);
+
+        $this->command->info('Berhasil menyeeder ' . count($data) . ' data lowongan magang');
+        $this->command->info('Jumlah status Aktif: ' . $activeCount . ' (' . ($activeRatio*100) . '%)');
+        $this->command->info('Jumlah status Selesai: ' . $completedCount . ' (' . ((1-$activeRatio)*100) . '%)');
     }
 }

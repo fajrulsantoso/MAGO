@@ -29,5 +29,7 @@ class ProdiSeeder extends Seeder
         ];
 
         DB::table('m_prodi')->insert($data);
+
+        $this->command->info('Berhasil menyeeder ' . count($data) . ' data prodi');
     }
 }

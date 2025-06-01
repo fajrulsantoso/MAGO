@@ -20,11 +20,11 @@ class ManajemenJenisMagangResource extends Resource
     protected static ?string $model = JenisMagangModel::class;
 
     protected static ?string $navigationIcon = 'heroicon-s-rectangle-group';
-    protected static ?string $navigationLabel = 'Manajemen Jenis Magang';
+    protected static ?string $navigationLabel = 'Jenis Magang';
     protected static ?string $slug = 'manajemen-jenis-magang';
     protected static ?string $modelLabel = 'Jenis Magang';
     protected static ?string $pluralModelLabel = 'Data Jenis Magang';
-    protected static ?string $navigationGroup = 'Reference Data';
+    protected static ?string $navigationGroup = 'Data Referensi';
 
     public static function form(Form $form): Form
     {
@@ -63,7 +63,9 @@ class ManajemenJenisMagangResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->emptyStateHeading('Tidak ada data jenis magang yang ditemukan')
+            ->emptyStateDescription('Silakan buat data jenis magang baru.');
     }
 
     public static function getRelations(): array

@@ -19,6 +19,8 @@ class ProvinsiSeeder extends Seeder
         // Skip header
         fgetcsv($csv);
 
+        $totalRows = count(file($csvFile)) - 1; // Total rows excluding header
+
         while (($data = fgetcsv($csv)) !== FALSE) {
             ProvinsiModel::updateOrCreate(
                 ['id_provinsi' => $data[0]],
@@ -27,5 +29,7 @@ class ProvinsiSeeder extends Seeder
         }
 
         fclose($csv);
+
+        $this->command->info('Berhasil menyeeder ' . $totalRows . ' data admin');
     }
 }

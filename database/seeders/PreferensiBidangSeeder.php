@@ -53,5 +53,7 @@ class PreferensiBidangSeeder extends Seeder
         
         // Insert ke database
         DB::table('r_preferensi_bidang')->insert($data);
+
+        $this->command->info('Berhasil menyeeder ' . count($data) . ' data preferensi bidang');
     }
 }

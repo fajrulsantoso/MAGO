@@ -24,7 +24,7 @@ class ListPreferensiMahasiswas extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Action::make('New Preferensi')
+            Action::make('New Preferensi Magang')
                 ->url(PreferensiMahasiswaResource::getUrl('create'))
                 ->button(),
         ];

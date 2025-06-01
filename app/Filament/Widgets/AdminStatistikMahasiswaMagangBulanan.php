@@ -10,6 +10,7 @@ use Symfony\Component\VarDumper\VarDumper;
 class AdminStatistikMahasiswaMagangBulanan extends ChartWidget
 {
     protected static ?string $heading = 'Grafik Mahasiswa Magang per Bulan';
+    protected static ?string $maxHeight = '260px';
 
     protected function getData(): array
     {

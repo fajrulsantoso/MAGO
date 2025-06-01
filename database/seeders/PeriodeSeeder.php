@@ -65,5 +65,7 @@ class PeriodeSeeder extends Seeder
         }
         
         DB::table('m_periode')->insert($data);
+
+        $this->command->info('Berhasil menyeeder ' . count($data) . ' data periode');
     }
 }

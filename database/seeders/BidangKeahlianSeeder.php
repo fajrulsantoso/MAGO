@@ -37,5 +37,7 @@ class BidangKeahlianSeeder extends Seeder
         ];
 
         DB::table('m_bidang_keahlian')->insert($data);
+
+        $this->command->info('Berhasil menyeeder ' . count($data) . ' data bidang keahlian');
     }
 }

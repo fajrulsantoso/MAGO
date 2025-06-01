@@ -26,11 +26,11 @@ class LowonganResource extends Resource
     protected static ?string $model = LowonganMagangModel::class;
 
     protected static ?string $navigationIcon = 'heroicon-s-briefcase';
-    protected static ?string $navigationLabel = 'Manajemen Lowongan';
+    protected static ?string $navigationLabel = 'Lowongan Magang';
     protected static ?string $slug = 'manajemen-lowongan';
     protected static ?string $modelLabel = 'Lowongan';
     protected static ?string $pluralModelLabel = 'Data Lowongan Magang';
-    protected static ?string $navigationGroup = 'Magang';
+    protected static ?string $navigationGroup = 'Administrasi Magang';
 
     public static function form(Form $form): Form
     {
@@ -49,6 +49,14 @@ class LowonganResource extends Resource
                             ->searchable()
                             ->required()
                             ->reactive()
+                            ->afterStateHydrated(function ($state, callable $set, $record) {
+                                if ($state) {
+                                    $perusahaan = PerusahaanModel::find($state);
+                                    if ($perusahaan) {
+                                        $set('alamat_perusahaan', $perusahaan->alamat);
+                                    }
+                                }
+                            })
                             ->afterStateUpdated(function ($state, callable $set) {
                                 if ($state) {
                                     $perusahaan = PerusahaanModel::find($state);
@@ -84,7 +92,14 @@ class LowonganResource extends Resource
                             ->label('Provinsi')
                             ->options(ProvinsiModel::all()->pluck('nama_provinsi', 'id_provinsi'))
                             ->searchable()
+                            ->native(false)
                             ->reactive() // TRIGGER DROPDOWN DAERAH 
+                            ->afterStateHydrated(function ($state, callable $set, $record) {
+                                if ($record && $record->daerahMagang) {
+                                    $provinsiId = $record->daerahMagang->id_provinsi;
+                                    $set('id_provinsi', $provinsiId);
+                                }
+                            })
                             ->required(),
 
                         Forms\Components\Select::make('id_daerah_magang')
@@ -101,6 +116,13 @@ class LowonganResource extends Resource
                             ->searchable()
                             ->required()
                             ->disabled(fn(callable $get) => !$get('id_provinsi')) // Disable jika belum pilih provinsi
+                            ->native(false)
+                            ->afterStateHydrated(function ($state, callable $set, $record) {
+                                // If we have a record, make sure to set the daerah_magang value
+                                if (!$state && $record) {
+                                    $set('id_daerah_magang', $record->id_daerah_magang);
+                                }
+                            })
                             ->reactive(),
 
                         Forms\Components\Select::make('id_periode')
@@ -177,8 +199,8 @@ class LowonganResource extends Resource
                 Tables\Columns\TextColumn::make('daerahMagang.namaLengkap')
                     ->label('Lokasi')
                     ->limit(10),
-                    // ->searchable() // Commented out to avoid redundancy with 'daerahMagang.nama_daerah', which is already searchable.
-                    // ->sortable(),
+                // ->searchable() // Commented out to avoid redundancy with 'daerahMagang.nama_daerah', which is already searchable.
+                // ->sortable(),
 
                 // Kolom tersembunyi untuk pencarian
                 Tables\Columns\TextColumn::make('daerahMagang.nama_daerah')
@@ -211,7 +233,8 @@ class LowonganResource extends Resource
                         'danger' => 'Selesai',
                     ]),
             ])
-            ->emptyStateHeading('Tidak ada data lowongan')
+            ->emptyStateHeading('Tidak ada data lowongan magang yang ditemukan')
+            ->emptyStateDescription('Silakan buat lowongan magang baru.')
             ->emptyStateIcon('heroicon-o-document-text')
             ->filters([
                 Tables\Filters\SelectFilter::make('status')

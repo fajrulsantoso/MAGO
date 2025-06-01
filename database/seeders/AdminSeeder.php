@@ -87,5 +87,7 @@ class AdminSeeder extends Seeder
         ];
 
         DB::table('m_admin')->insert($data);
+
+        $this->command->info('Berhasil menyeeder ' . count($data) . ' data admin');
     }
 }

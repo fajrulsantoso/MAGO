@@ -65,6 +65,8 @@ class DosenPembimbingSeeder extends Seeder
         }
 
         DB::table('m_dospem')->insert($data);
+
+        $this->command->info('Berhasil menyeeder ' . count($data) . ' data dosen pembimbing');
     }
     
     /**

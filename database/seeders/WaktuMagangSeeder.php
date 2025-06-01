@@ -27,5 +27,7 @@ class WaktuMagangSeeder extends Seeder
         ];
 
         DB::table('m_waktu_magang')->insert($data);
+
+        $this->command->info('Berhasil menyeeder ' . count($data) . ' data waktu magang');
     }
 }

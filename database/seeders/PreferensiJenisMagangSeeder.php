@@ -53,5 +53,7 @@ class PreferensiJenisMagangSeeder extends Seeder
         
         // Insert ke database
         DB::table('r_preferensi_jenis_magang')->insert($data);
+
+        $this->command->info('Berhasil menyeeder ' . count($data) . ' data preferensi jenis magang');
     }
 }

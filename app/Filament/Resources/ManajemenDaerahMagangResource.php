@@ -23,11 +23,11 @@ class ManajemenDaerahMagangResource extends Resource
     protected static ?string $model = DaerahMagangModel::class;
 
     protected static ?string $navigationIcon = 'heroicon-s-map';
-    protected static ?string $navigationLabel = 'Manajemen Daerah Magang';
+    protected static ?string $navigationLabel = 'Daerah Magang';
     protected static ?string $slug = 'manajemen-daerah-magang';
     protected static ?string $modelLabel = 'Daerah Magang';
     protected static ?string $pluralModelLabel = 'Data Daerah Magang';
-    protected static ?string $navigationGroup = 'Reference Data';
+    protected static ?string $navigationGroup = 'Data Referensi';
 
     public static function form(Form $form): Form
     {
@@ -95,7 +95,9 @@ class ManajemenDaerahMagangResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->emptyStateHeading('Tidak ada data daerah yang ditemukan')
+            ->emptyStateDescription('Silakan buat data daerah baru.');
     }
 
     public static function getRelations(): array

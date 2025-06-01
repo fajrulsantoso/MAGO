@@ -124,5 +124,7 @@ class PengajuanMagangSeeder extends Seeder
         
         // Insert semua data ke database
         DB::table('t_pengajuan_magang')->insert($data);
+
+        $this->command->info('Berhasil menyeeder ' . count($data) . ' data pengajuan magang');
     }
 }

@@ -119,5 +119,7 @@ class DospemBidangKeahlianSeeder extends Seeder
 
         // Insert ke database
         DB::table('r_dospem_bidang_keahlian')->insert($dospemBidangKeahlian);
+
+        $this->command->info('Berhasil menyeeder ' . count($dospemBidangKeahlian) . ' data dospem bidang keahlian');
     }
 }

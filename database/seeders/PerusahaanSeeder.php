@@ -1117,5 +1117,7 @@ class PerusahaanSeeder extends Seeder
         ];
 
         DB::table('m_perusahaan')->insert($data);
+
+        $this->command->info('Berhasil menyeeder ' . count($data) . ' data perusahaan');
     }
 }

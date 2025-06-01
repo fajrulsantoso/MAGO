@@ -45,5 +45,7 @@ class RoleSeeder extends Seeder
                 $role
             );
         }
+
+        $this->command->info('Berhasil menyeeder ' . count($data) . ' data role');
     }
 }

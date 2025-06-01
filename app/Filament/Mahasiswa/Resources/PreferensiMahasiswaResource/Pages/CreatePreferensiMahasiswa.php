@@ -12,6 +12,7 @@ class CreatePreferensiMahasiswa extends CreateRecord
 {
     protected static string $resource = PreferensiMahasiswaResource::class;
 
+    protected static ?string $title = 'Buat Preferensi Profil Baru';
     protected array $bidangIds = [];
     protected array $jenisIds = [];
 

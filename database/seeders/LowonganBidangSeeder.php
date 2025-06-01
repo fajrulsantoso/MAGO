@@ -214,5 +214,7 @@ class LowonganBidangSeeder extends Seeder
         
         // Insert ke database
         DB::table('r_lowongan_bidang')->insert($lowonganBidang);
+
+        $this->command->info('Berhasil menyeeder ' . count($lowonganBidang) . ' data lowongan bidang');
     }
 }

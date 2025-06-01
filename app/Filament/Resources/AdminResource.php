@@ -16,11 +16,7 @@ class AdminResource extends Resource
 {
     protected static ?string $model = UserModel::class;
 
-    protected static ?string $navigationLabel = 'Manajemen Pengguna';
-    protected static ?string $navigationIcon = 'heroicon-s-user-group';
-    protected static ?string $modelLabel = 'Pengguna';
-    protected static ?string $pluralModelLabel = 'Data Pengguna';
-    protected static ?string $navigationGroup = 'Reference Data';
+
     protected static ?int $navigationSort = 1;
 
     public static function getEloquentQuery(): Builder

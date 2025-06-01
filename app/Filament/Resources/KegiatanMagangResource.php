@@ -22,11 +22,11 @@ class KegiatanMagangResource extends Resource
     protected static ?string $model = PengajuanMagangModel::class;
 
     protected static ?string $navigationIcon = 'heroicon-s-document-check';
-    protected static ?string $navigationLabel = 'Manajemen Pengajuan Magang';
+    protected static ?string $navigationLabel = 'Pengajuan Magang';
     protected static ?string $slug = 'kegiatan-magang';
     protected static ?string $modelLabel = 'Pengajuan Magang';
     protected static ?string $pluralModelLabel = 'Data Pengajuan Magang';
-    protected static ?string $navigationGroup = 'Magang';
+    protected static ?string $navigationGroup = 'Administrasi Magang';
 
     public static function infolist(Infolist $infolist): Infolist
     {

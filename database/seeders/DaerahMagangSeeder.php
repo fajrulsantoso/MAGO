@@ -19,6 +19,8 @@ class DaerahMagangSeeder extends Seeder
         // Skip header
         fgetcsv($csv);
 
+        $totalRows = count(file($csvFile)) - 1; // Total rows excluding header
+
         while (($data = fgetcsv($csv)) !== FALSE) {
             DaerahMagangModel::updateOrCreate(
                 ['id_daerah_magang' => $data[0]],
@@ -31,5 +33,7 @@ class DaerahMagangSeeder extends Seeder
         }
 
         fclose($csv);
+
+        $this->command->info('Berhasil menyeeder ' . $totalRows . ' data daerah magang');
     }
 }

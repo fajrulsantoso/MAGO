@@ -10,6 +10,8 @@ use Carbon\Carbon;
 
 class AdminStatsOverview extends StatsOverviewWidget
 {
+    protected int $totalPeriod = 14;
+
     protected function getStats(): array
     {    
         // Data saat ini
@@ -18,9 +20,9 @@ class AdminStatsOverview extends StatsOverviewWidget
         $rasio = $totalDosen > 0 ? round($totalMahasiswa / $totalDosen, 2) : 0;
         
         // Data minggu lalu untuk perbandingan
-        $lastWeek = Carbon::now()->subWeek();
+        // $lastWeek = Carbon::now()->subWeek();
         // $lastWeek = Carbon::now()->subMonth();
-        // $lastWeek = Carbon::now()->subDays(1);
+        $lastWeek = Carbon::now()->subDays($this->totalPeriod);
         $totalMahasiswaLastWeek = PenempatanMagangModel::where('created_at', '<', $lastWeek)
             ->distinct('id_mahasiswa')
             ->count('id_mahasiswa');
@@ -44,19 +46,19 @@ class AdminStatsOverview extends StatsOverviewWidget
         $rasioChart = $this->getRasioChartData();
 
         return [
-            Stat::make('Total Mahasiswa Magang', $totalMahasiswa)
+            Stat::make("Total Mahasiswa Magang (".$this->totalPeriod." hari)", $totalMahasiswa)
                 ->description($mahasiswaDesc)
                 ->descriptionIcon($mahasiswaIcon)
                 ->color($mahasiswaColor)
                 ->chart($mahasiswaChart),
 
-            Stat::make('Dosen Pembimbing', $totalDosen)
+            Stat::make("Dosen Pembimbing (".$this->totalPeriod." hari)", $totalDosen)
                 ->description($dosenDesc)
                 ->descriptionIcon($dosenIcon)
                 ->color($dosenColor)
                 ->chart($dosenChart),
 
-            Stat::make('Rasio Dosen:Mahasiswa', "1:$rasio")
+            Stat::make("Rasio Dosen:Mahasiswa (".$this->totalPeriod." hari)", "1:$rasio")
                 ->description($rasioDesc)
                 ->descriptionIcon($rasioIcon)
                 ->color($rasioColor)
@@ -70,26 +72,8 @@ class AdminStatsOverview extends StatsOverviewWidget
     private function getMahasiswaChartData(): array
     {
         $data = [];
-        
-        // // Ambil data untuk 14 hari terakhir
-        // for ($i = 13; $i >= 0; $i--) {
-        //     $date = Carbon::now()->subDays($i)->startOfDay();
-        //     $nextDate = $i > 0 ? Carbon::now()->subDays($i-1)->startOfDay() : Carbon::now()->addDay()->startOfDay();
-            
-        //     // Jumlah mahasiswa per hari (mahasiswa yang mulai magang pada hari tersebut)
-        //     $count = PenempatanMagangModel::where('created_at', '>=', $date)
-        //                                  ->where('created_at', '<', $nextDate)
-        //                                  ->distinct('id_mahasiswa')
-        //                                  ->count('id_mahasiswa');
-            
-        //     // Tambahkan jumlah kumulatif jika diperlukan
-        //     // $count = PenempatanMagangModel::where('created_at', '<=', $date)->distinct('id_mahasiswa')->count('id_mahasiswa');
-            
-        //     $data[] = $count;
-        // }
-        
-        // Ambil data untuk 14 hari terakhir, urutan terbalik
-        for ($i = 0; $i <= 13; $i++) {
+
+        for ($i = $this->totalPeriod; $i >= 0; $i--) {
             $date = Carbon::now()->subDays($i)->startOfDay();
             $nextDate = $i > 0 ? Carbon::now()->subDays($i-1)->startOfDay() : Carbon::now()->addDay()->startOfDay();
             
@@ -115,18 +99,7 @@ class AdminStatsOverview extends StatsOverviewWidget
     {
         $data = [];
         
-        // // Ambil data untuk 14 hari terakhir
-        // for ($i = 13; $i >= 0; $i--) {
-        //     $date = Carbon::now()->subDays($i)->startOfDay();
-            
-        //     // Jumlah dosen hingga tanggal tersebut
-        //     $count = DosenPembimbingModel::where('created_at', '<=', $date)->count();
-            
-        //     $data[] = $count;
-        // }
-
-        // Ambil data untuk 14 hari terakhir, urutan terbalik
-        for ($i = 0; $i <= 13; $i++) {
+        for ($i = $this->totalPeriod; $i >= 0; $i--) {
             $date = Carbon::now()->subDays($i)->startOfDay();
             
             // Jumlah dosen hingga tanggal tersebut
@@ -145,25 +118,7 @@ class AdminStatsOverview extends StatsOverviewWidget
     {
         $data = [];
         
-        // // Ambil data untuk 14 hari terakhir
-        // for ($i = 13; $i >= 0; $i--) {
-        //     $date = Carbon::now()->subDays($i)->startOfDay();
-            
-        //     // Jumlah mahasiswa dan dosen hingga tanggal tersebut
-        //     $mahasiswa = PenempatanMagangModel::where('created_at', '<=', $date)
-        //                                      ->distinct('id_mahasiswa')
-        //                                      ->count('id_mahasiswa');
-            
-        //     $dosen = DosenPembimbingModel::where('created_at', '<=', $date)->count();
-            
-        //     // Hitung rasio
-        //     $ratio = $dosen > 0 ? round($mahasiswa / $dosen, 2) : 0;
-            
-        //     $data[] = $ratio;
-        // }
-
-        // Ambil data untuk 14 hari terakhir, urutan terbalik
-        for ($i = 0; $i <= 13; $i++) {
+        for ($i = $this->totalPeriod; $i >= 0; $i--) {
             $date = Carbon::now()->subDays($i)->startOfDay();
             
             // Jumlah mahasiswa dan dosen hingga tanggal tersebut

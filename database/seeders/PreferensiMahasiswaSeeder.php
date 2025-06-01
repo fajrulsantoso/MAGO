@@ -102,5 +102,7 @@ class PreferensiMahasiswaSeeder extends Seeder
         }
         
         DB::table('r_preferensi_mahasiswa')->insert($data);
+
+        $this->command->info('Berhasil menyeeder ' . count($data) . ' data preferensi mahasiswa');
     }
 }

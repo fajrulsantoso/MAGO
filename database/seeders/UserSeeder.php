@@ -929,5 +929,7 @@ class UserSeeder extends Seeder
         $allUsers = array_merge($admins, $mahasiswa, $dosenPembimbing);
 
         DB::table('m_user')->insert($allUsers);
+
+        $this->command->info('Berhasil menyeeder ' . count($allUsers) . ' data user');
     }
 }

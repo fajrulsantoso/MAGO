@@ -20,8 +20,7 @@ class ViewPreferensiMahasiswa extends ViewRecord
 
     protected static string $view = 'filament.mahasiswa.resources.preferensi-mahasiswa-resource.pages.view-preferensi-mahasiswa';
 
-    protected static ?string $title = 'Preferensi Mahasiswa';
-    protected static ?string $navigationLabel = 'Preferensi Mahasiswa';
+    protected static ?string $title = 'Preferensi Profil Saya';
     protected static ?string $slug = 'preferensi mahasiswa';
 
     public function infolist(Infolist $infolist): Infolist
@@ -46,7 +45,7 @@ class ViewPreferensiMahasiswa extends ViewRecord
                         TextEntry::make('jenisMagang')
                             ->label('Jenis Magang')
                             ->formatStateUsing(fn() => $this->record->jenisMagang->pluck('nama_jenis_magang')->implode(', ') ?? '-'),
-                        TextEntry::make('ranking_jenis')->label('Ranking Jenis'),
+                        TextEntry::make('ranking_jenis_magang')->label('Ranking Jenis'),
                     ]),
                 Section::make('Insentif')
                     ->schema([

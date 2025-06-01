@@ -21,9 +21,8 @@ class PerusahaanResource extends Resource
 {
     protected static ?string $model = PerusahaanModel::class;
 
-    protected static ?string $navigationIcon = 'heroicon-s-building-office'; // pakai solid icon
     protected static ?string $navigationLabel = 'Perusahaan Mitra';
-    protected static ?string $navigationGroup = 'Reference Data';
+    protected static ?string $navigationGroup = 'Pengguna & Mitra';
     protected static ?int $navigationSort = 1;
 
     protected static ?string $slug = 'menajemen-perusahan';
@@ -51,14 +50,15 @@ class PerusahaanResource extends Resource
                     ->email()
                     ->required(),
 
-              Select::make('id_admin')
-    ->label('Admin Penanggung Jawab')
-    ->options(function () {
-        return AdminModel::with('user')->get()->pluck('user.nama', 'id_admin');
-    })
-    ->searchable()
-    ->preload()
-    ->required(),
+                Select::make('id_admin')
+                    ->label('Admin Penanggung Jawab')
+                    ->options(function () {
+                        return AdminModel::with('user')->get()->pluck('user.nama', 'id_admin');
+                    })
+                    ->searchable()
+                    ->preload()
+                    ->required(),
+
                 TextInput::make('website')
                     ->required(),
             ]);
@@ -72,9 +72,9 @@ class PerusahaanResource extends Resource
                 TextColumn::make('alamat')->limit(50),
                 TextColumn::make('no_telepon'),
                 TextColumn::make('email'),
-               TextColumn::make('admin.user.nama')
-    ->label('Admin')
-    ->searchable(),
+                TextColumn::make('admin.user.nama')
+                    ->label('Admin')
+                    ->searchable(),
 
                 TextColumn::make('website')->label('Website'),
             ])
