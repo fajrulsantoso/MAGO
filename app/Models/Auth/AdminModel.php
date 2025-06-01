@@ -36,5 +36,12 @@ class AdminModel extends Model
     public function perusahaan(): HasMany
     {
         return $this->hasMany(PerusahaanModel::class, 'id_admin', 'id_admin');
+
     }
+
+    public function admin()
+{
+    return $this->belongsTo(\App\Models\Auth\AdminModel::class, 'id_admin', 'id_admin')
+                ->with('user'); // tambahkan eager loading ke user
+}
 }

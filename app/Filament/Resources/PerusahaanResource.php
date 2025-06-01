@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Filament\Resources;
-
+use App\Models\Auth\AdminModel;
 use Filament\Forms;
 use Filament\Tables;
 use Filament\Forms\Form;
@@ -21,14 +21,14 @@ class PerusahaanResource extends Resource
 {
     protected static ?string $model = PerusahaanModel::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-building-office';
+    protected static ?string $navigationIcon = 'heroicon-s-building-office'; // pakai solid icon
     protected static ?string $navigationLabel = 'Perusahaan Mitra';
     protected static ?string $navigationGroup = 'Reference Data';
     protected static ?int $navigationSort = 1;
 
     protected static ?string $slug = 'menajemen-perusahan';
-    protected static ?string $modelLabel = 'Lowongan';
-    protected static ?string $pluralModelLabel = 'Data Lowongan Magang';
+    protected static ?string $modelLabel = 'Perusahaan Mitra'; // update label
+    protected static ?string $pluralModelLabel = 'Data Perusahaan Mitra'; // update label
 
     public static function form(Form $form): Form
     {
@@ -51,13 +51,14 @@ class PerusahaanResource extends Resource
                     ->email()
                     ->required(),
 
-                Select::make('id_admin')
-                    ->label('Admin Penanggung Jawab')
-                    ->relationship('admin', 'nip')
-                    ->searchable()
-                    ->preload()
-                    ->required(),
-
+              Select::make('id_admin')
+    ->label('Admin Penanggung Jawab')
+    ->options(function () {
+        return AdminModel::with('user')->get()->pluck('user.nama', 'id_admin');
+    })
+    ->searchable()
+    ->preload()
+    ->required(),
                 TextInput::make('website')
                     ->required(),
             ]);
@@ -71,16 +72,19 @@ class PerusahaanResource extends Resource
                 TextColumn::make('alamat')->limit(50),
                 TextColumn::make('no_telepon'),
                 TextColumn::make('email'),
-                TextColumn::make('admin.nip')->label('Admin'),
-                TextColumn::make('website')  // Fixed case to match database column
-                    ->label('Website'),     // Proper label for display
+               TextColumn::make('admin.user.nama')
+    ->label('Admin')
+    ->searchable(),
+
+                TextColumn::make('website')->label('Website'),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),  // Added view action
+                Tables\Actions\ViewAction::make(),   // Sudah menggunakan default Laravel Filament
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(), // Tambahkan delete button
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -101,7 +105,7 @@ class PerusahaanResource extends Resource
         return [
             'index' => Pages\ListPerusahaans::route('/'),
             'create' => Pages\CreatePerusahaan::route('/create'),
-              'view' => Pages\ViewPerusahaan::route('/{record}'),
+            'view' => Pages\ViewPerusahaan::route('/{record}'),
             'edit' => Pages\EditPerusahaan::route('/{record}/edit'),
         ];
     }
