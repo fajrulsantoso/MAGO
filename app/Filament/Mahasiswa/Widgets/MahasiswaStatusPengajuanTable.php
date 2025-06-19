@@ -20,6 +20,11 @@ class MahasiswaStatusPengajuanTable extends BaseWidget
     protected static ?int $sort = 1;
     protected static ?string $heading = 'Status Pengajuan Magang Saya';
 
+    public static function canView(): bool
+    {
+        return auth()->user()?->mahasiswa?->preferensi()->exists();
+    }
+    
     public function getColumnSpan(): int|string|array
     {
         return 'full';

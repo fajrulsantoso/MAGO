@@ -34,6 +34,16 @@ class LamarMagangMahasiswaResource extends Resource
     protected static ?string $navigationGroup = 'Histori Lamaran';
     protected static ?int $navigationSort = 3;
 
+    public static function shouldRegisterNavigation(): bool
+    {
+        return auth()->user()?->mahasiswa?->preferensi()->exists() ?? false;
+    }
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()?->mahasiswa?->preferensi()->exists() ?? false;
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -204,7 +214,7 @@ class LamarMagangMahasiswaResource extends Resource
                 Tables\Actions\ViewAction::make(),
                 // Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
-                    ->visible(fn ($record) => $record->status !== 'Diterima'),
+                    ->visible(fn($record) => $record->status !== 'Diterima'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

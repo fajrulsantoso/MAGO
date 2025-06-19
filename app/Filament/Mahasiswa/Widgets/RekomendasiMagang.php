@@ -19,6 +19,11 @@ class RekomendasiMagang extends BaseWidget
     protected static ?string $heading = '🎗️ Rekomendasi Magang';
     protected static ?int $sort = 3;
 
+    public static function canView(): bool
+    {
+        return auth()->user()?->mahasiswa?->preferensi()->exists();
+    }
+    
     protected array $bobot = [
         1 => 0.397,
         2 => 0.297,

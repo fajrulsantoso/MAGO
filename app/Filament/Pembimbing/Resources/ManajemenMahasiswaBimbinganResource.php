@@ -73,7 +73,10 @@ class ManajemenMahasiswaBimbinganResource extends Resource
                 TextColumn::make('status')
                     ->label('Status Magang')
                     ->badge()
-                    ->color('success'),
+                    ->color(fn($state) => match ($state) {
+                        'Berlangsung' => 'primary',
+                        'Selesai'    => 'success',
+                    }),
             ])
             ->filters([
                 SelectFilter::make('prodi')

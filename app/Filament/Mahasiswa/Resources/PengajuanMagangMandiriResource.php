@@ -44,6 +44,16 @@ class PengajuanMagangMandiriResource extends Resource
     protected static ?string $navigationGroup = 'Pencarian Magang';
     protected static ?int $navigationSort = 1;
 
+    public static function shouldRegisterNavigation(): bool
+    {
+        return auth()->user()?->mahasiswa?->preferensi()->exists() ?? false;
+    }
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()?->mahasiswa?->preferensi()->exists() ?? false;
+    }
+    
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
