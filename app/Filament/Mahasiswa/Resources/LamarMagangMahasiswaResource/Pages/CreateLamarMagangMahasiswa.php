@@ -76,7 +76,7 @@ class CreateLamarMagangMahasiswa extends CreateRecord
                 if ($idLowonganComponent) {
                     $idLowonganComponent->disabled();
                 }
-                    
+
                 foreach ($childComponents as $component) {
                     if (method_exists($component, 'getLabel')) {
                         if ($component->getLabel() == 'Tanggal Pengajuan') {
@@ -143,22 +143,39 @@ class CreateLamarMagangMahasiswa extends CreateRecord
     }
 
     protected function beforeCreate(): void
-{
-    $idMahasiswa = auth()->user()->mahasiswa->id_mahasiswa;
-    $existingLamaran = PengajuanMagangModel::where('id_mahasiswa', $idMahasiswa)
-        ->whereIn('status', ['Diajukan', 'Diterima'])
-        ->first();
+    {
+        $idMahasiswa = auth()->user()->mahasiswa->id_mahasiswa;
+        $existingLamaran = PengajuanMagangModel::where('id_mahasiswa', $idMahasiswa)
+            ->whereIn('status', ['Diajukan', 'Diterima'])
+            ->with(['lowongan'])
+            ->get();
 
-    if ($existingLamaran) {
-        Notification::make()
-            ->title('Gagal Mengajukan Lamaran')
-            ->body('Anda sudah memiliki satu lamaran magang aktif. Anda hanya bisa melamar lagi jika lamaran sebelumnya telah ditolak.')
-            ->danger()
-            ->send();
+        foreach ($existingLamaran as $lamaran) {
+            // Jika status masih Diajukan, langsung blok
+            if ($lamaran->status === 'Diajukan') {
+                Notification::make()
+                    ->title('Gagal Mengajukan Lamaran')
+                    ->body('Anda sudah memiliki satu lamaran magang aktif. Anda hanya bisa melamar lagi jika lamaran sebelumnya telah ditolak.')
+                    ->danger()
+                    ->send();
+                $this->halt();
+            }
 
-        $this->halt(); // Hentikan proses pengajuan
+            // Jika status Diterima, cek tanggal selesai magang
+            if ($lamaran->status === 'Diterima' && $lamaran->lowongan) {
+                $tanggalSelesai = $lamaran->lowongan->tanggal_selesai_magang ?? null;
+                if ($tanggalSelesai && now()->lessThanOrEqualTo($tanggalSelesai)) {
+                    Notification::make()
+                        ->title('Gagal Mengajukan Lamaran')
+                        ->body('Anda masih memiliki magang aktif yang belum selesai. Anda hanya bisa melamar lagi jika periode magang sudah berakhir atau lamaran sebelumnya ditolak.')
+                        ->danger()
+                        ->send();
+                    $this->halt();
+                }
+            }
+        }
     }
-}
+
 
     protected function afterMount(): void
     {
