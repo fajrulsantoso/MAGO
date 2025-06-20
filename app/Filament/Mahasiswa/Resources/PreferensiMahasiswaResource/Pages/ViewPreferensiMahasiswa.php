@@ -33,29 +33,69 @@ class ViewPreferensiMahasiswa extends ViewRecord
                         TextEntry::make('bidangKeahlian')
                             ->label('Bidang Keahlian')
                             ->formatStateUsing(fn() => $this->record->bidangKeahlian->pluck('nama_bidang_keahlian')->implode(', ') ?? '-'),
-                        TextEntry::make('ranking_bidang')->label('Ranking Bidang'),
+                        TextEntry::make('ranking_bidang')
+                            ->label('Tingkat Prioritas Bidang Keahlian')
+                            ->formatStateUsing(fn($state) => match ($state) {
+                                1 => 'Prioritas Utama',
+                                2 => 'Prioritas Tinggi',
+                                3 => 'Prioritas Sedang',
+                                4 => 'Prioritas Rendah',
+                                5 => 'Tidak Diprioritaskan',
+                            }),
                     ]),
                 Section::make('Daerah Magang')
                     ->schema([
                         TextEntry::make('daerahMagang.nama_daerah')->label('Daerah Magang'),
-                        TextEntry::make('ranking_daerah')->label('Ranking Daerah'),
+                        TextEntry::make('ranking_daerah')
+                            ->label('Tingkat Prioritas Daerah Magang')
+                            ->formatStateUsing(fn($state) => match ($state) {
+                                1 => 'Prioritas Utama',
+                                2 => 'Prioritas Tinggi',
+                                3 => 'Prioritas Sedang',
+                                4 => 'Prioritas Rendah',
+                                5 => 'Tidak Diprioritaskan',
+                            }),
                     ]),
                 Section::make('Jenis Magang')
                     ->schema([
                         TextEntry::make('jenisMagang')
                             ->label('Jenis Magang')
                             ->formatStateUsing(fn() => $this->record->jenisMagang->pluck('nama_jenis_magang')->implode(', ') ?? '-'),
-                        TextEntry::make('ranking_jenis_magang')->label('Ranking Jenis'),
+                        TextEntry::make('ranking_jenis_magang')
+                         ->label('Tingkat Prioritas Jenis Magang')
+                            ->formatStateUsing(fn($state) => match ($state) {
+                                1 => 'Prioritas Utama',
+                                2 => 'Prioritas Tinggi',
+                                3 => 'Prioritas Sedang',
+                                4 => 'Prioritas Rendah',
+                                5 => 'Tidak Diprioritaskan',
+                            }),
                     ]),
                 Section::make('Insentif')
                     ->schema([
                         TextEntry::make('insentif.keterangan')->label('Insentif'),
-                        TextEntry::make('ranking_insentif')->label('Ranking Insentif'),
+                        TextEntry::make('ranking_insentif')
+                         ->label('Tingkat Prioritas Insentif')
+                            ->formatStateUsing(fn($state) => match ($state) {
+                                1 => 'Prioritas Utama',
+                                2 => 'Prioritas Tinggi',
+                                3 => 'Prioritas Sedang',
+                                4 => 'Prioritas Rendah',
+                                5 => 'Tidak Diprioritaskan',
+                            }),
                     ]),
                 Section::make('Waktu Magang')
                     ->schema([
                         TextEntry::make('waktuMagang.waktu_magang')->label('Waktu Magang'),
-                        TextEntry::make('ranking_waktu_magang')->label('Ranking Waktu'),
+                        TextEntry::make('ranking_waktu_magang')
+                         ->label('Tingkat Prioritas Waktu Magang')
+                            ->formatStateUsing(fn($state) => match ($state) {
+                                1 => 'Prioritas Utama',
+                                2 => 'Prioritas Tinggi',
+                                3 => 'Prioritas Sedang',
+                                4 => 'Prioritas Rendah',
+                                5 => 'Tidak Diprioritaskan',
+                            }),
                     ]),
             ]);
     }
@@ -64,7 +104,8 @@ class ViewPreferensiMahasiswa extends ViewRecord
     {
         return [
             Actions\EditAction::make(),
-            Actions\DeleteAction::make(),
+            Actions\DeleteAction::make()
+            ->modalHeading('Delete Preferensi Mahasiswa'),
         ];
     }
 }

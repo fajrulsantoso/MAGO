@@ -5,6 +5,7 @@ namespace App\Filament\Mahasiswa\Resources\PreferensiMahasiswaResource\Pages;
 use App\Filament\Mahasiswa\Resources\PreferensiMahasiswaResource;
 use App\Models\Reference\PreferensiMahasiswaModel;
 use Filament\Actions;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Facades\Auth;
 
@@ -34,11 +35,19 @@ class CreatePreferensiMahasiswa extends CreateRecord
     {
         $this->record->bidangKeahlian()->sync($this->bidangIds);
         $this->record->jenisMagang()->sync($this->jenisIds);
+
+        // Notifikasi + redirect
+        Notification::make()
+            ->title('Preferensi berhasil disimpan!')
+            ->body('Menu sudah tersedia, silakan jelajahi fitur-fitur yang ada.')
+            ->success()
+            ->send();
+
+        $this->redirect('/mahasiswa');
     }
 
     protected function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('index');
     }
-    
 }

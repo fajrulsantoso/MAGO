@@ -63,7 +63,10 @@ class ViewMahasiswaBimbingan extends ViewRecord
                             TextEntry::make('status')
                                 ->label('Status Magang')
                                 ->badge()
-                                ->color('success'),
+                                ->color(fn($state) => match ($state) {
+                                    'Berlangsung' => 'primary',
+                                    'Selesai'    => 'success',
+                                }),
                             TextEntry::make('pengajuan.lowongan.jenisMagang.nama_jenis_magang')
                                 ->label('Jenis Magang'),
                             TextEntry::make('pengajuan.lowongan.periode.nama_periode')
